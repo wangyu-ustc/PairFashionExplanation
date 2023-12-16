@@ -88,14 +88,14 @@ Description: {sentence}
 Items: {items}
 Key features:
 ```
-where the sentence and items are the sentence from the dataset and the entities extracted with NER.  
+where the sentence and items are the sentences from the dataset and the entities extracted with NER.  
 After querying ChatGPT, we end up with all the features
-corresponding to the extracted items, where some of key features are denoted as “not-specified”, meaning that ChatGPT could not find the key features. Such sentences are dropped.
+corresponding to the extracted items, where some of the key features are denoted as “not specified”, meaning that ChatGPT could not find the key features. Such sentences are dropped.
 Then we have 37737 sentences left. Then we query ChatGPT again with the following
 prompt: 
 Then we ask gpt-3.5-turbo with the following prompt:  
 ```
-Could you read this sentence and let me know if it is explaining why two pieces of clothing look good together as an outfit? It's possible that the sentence could be one or several sentences about why the two items complement each other and create a cohesive outfit. If no, then simply answer a "No"; If yes, please give a concise reason for how they complement each other in the form of "Reason: They match because ...".
+Could you read this sentence and let me know if it explains why two pieces of clothing look good together as an outfit? It's possible that the sentence could be one or several sentences about why the two items complement each other and create a cohesive outfit. If no, then simply answer a "No"; If yes, please give a concise reason for how they complement each other in the form of "Reason: They match because ...".
 {sentence}
 ```
 where the sentence is the extracted sentence from the above 37737 sentences. With the returned answers, we filter out the sentence with the answer ”No”. For the left sentences, we construct a new dataset with the entities, and features extracted from the previous and the sentences rewritten by ChatGPT with the answer "Yes". After the above process, we obtain a dataset with 6,407 examples.
@@ -108,7 +108,7 @@ Then with the file `data_preprocess/process_step1.py`, we could obtain the file 
 
 After this, we ask `gpt-3.5-turbo` to extract the related features according to the sentence and the corresponding nouns (items). The responses quried from ChatGPT is shown in `data_preprocess/responses.json`. With this file, we could run `data_preprocess/process_step2.py` to obtain the file `data/data2.csv`. 
 
-Then we query ChatGPT with  the obtained results are saved in `./data_preprocess/responses_step2.json`. Then we extract the answers out and discard all the samples with the response `No`, yielding the dataset `data.csv`. 
+Then we query ChatGPT with the obtained results saved in `./data_preprocess/responses_step2.json`. Then we extract the answers out and discard all the samples with the response `No`, yielding the dataset `data.csv`. 
 
 ## Implementation Details
 The configurations for fine-tuning adapted languages models are: learning rate=0.0002, weight decay=0, optimizer=Adam, training epoch=20, batch size=5 for GPT2
@@ -134,16 +134,16 @@ where $\overline{a}_{k_ik_j}$ is the corresponding element in $\overline{\mathbf
 
 $$\hat{y} = h_\phi(\textbf{e}_{\mathit{avg}})$$
 
-Subsequently, given the label of each pair $(t_i, t_j)$ as positive or negative, we utilize CrossEntropy loss to perform backward propagation and update the two MLPs in Eq. (1) and Eq. (2). Following training, we use the first MLP in Eq. (1) to derive the attention score $\mathbf{A}$ prior to normalization. Then we calculate the attention score of every word pair between $t_i$ and $t_j$. By averaging the attention scores across rows and columns, we identify the most significant words, $w_i$ in $t_i$ and $w_j$ in $t_j$, which inform the definition of $f_\theta$ in Cross-Attention:
+Subsequently, given the label of each pair $(t_i, t_j)$ as positive or negative, we utilize CrossEntropy loss to perform backward propagation and update the two MLPs in Eq. (1) and Eq. (2). Following training, we use the first MLP in Eq. (1) to derive the attention score $\mathbf{A}$ before normalization. Then we calculate the attention score of every word pair between $t_i$ and $t_j$. By averaging the attention scores across rows and columns, we identify the most significant words, $w_i$ in $t_i$ and $w_j$ in $t_j$, which inform the definition of $f_\theta$ in Cross-Attention:
 
 $$w_i, w_j = f_\theta(t_i, t_j)$$
 
 
-## Additioanl Experiments
+## Additional Experiments
 ### Case Study
 We provide more case studies in the following tables. 
 
-#### **Generated results of combining two stages together**
+#### **Generated results of combining two stages**
 | **Item/Feature** | **skirt dress/lemonbaby Peppa pig cartoon girls cotton birthday baby; costume/Peppa pig t ballerina** |
 | --- | --- |
 | **PEPLER-F** | The peppa-colored skirt complements the pink and blue colors in the dress. the peppa-colored skirt also adds a pop of color to the outfit. |
