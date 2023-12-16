@@ -114,9 +114,8 @@ Then we query ChatGPT with  the obtained results are saved in `./data_preprocess
 The configurations for fine-tuning adapted languages models are: learning rate=0.0002, weight decay=0, optimizer=Adam, training epoch=20, batch size=5 for GPT2
 and Flan-T5-large, while batch size=1 for Flan-t5-xl, max length=100, All codes are implemented with Python3.9.12 and PyTorch2.0.1 with CUDA 11.7. operated on Ubuntu (16.04.7 LTS) server with 2 NVIDIA GeForce GTS A6000 GPUs. Each has a memory of 49GB.
 
-### CrossAttention Extractor
 ### Cross Attention Extractor
-With $t_i$ and $t_j$, we use `Bert-tokenizer` to tokenize the sentences and get the embedding for each word $\{\textbf{e}_{i1},\cdots,\textbf{e}_{il_i}\}$ and $\{\textbf{e}_{j1},\cdots,\textbf{e}_{jl_j}\}$, where $l_i$ and $l_j$ are the lengths of the indices of tokenized sentences $t_i$ and $t_j$. $\{\textbf{e}_{i1},\cdots, \textbf{e}_{il_i}\}$, $\{\textbf{e}_{j1},\cdots,\textbf{e}_{jl_j}\}$ are the embeddings for $t_i$ and $t_j$, respectively, with each $\textbf{e} \in \mathbb{R}^{512}$.  
+With $t_i$ and $t_j$, we use `Bert-tokenizer` to tokenize the sentences and get the embedding for each word $\`\{\textbf{e}_{i1},\cdots,\textbf{e}_{il_i}\}\`$ and $\`\{\textbf{e}_{j1},\cdots,\textbf{e}_{jl_j}\}\`$, where $l_i$ and $l_j$ are the lengths of the indices of tokenized sentences $t_i$ and $t_j$. $\`\{\textbf{e}_{i1},\cdots, \textbf{e}_{il_i}\}\`$, $\`\{\textbf{e}_{j1},\cdots,\textbf{e}_{jl_j}\}\`$ are the embeddings for $t_i$ and $t_j$, respectively, with each $\textbf{e} \in \mathbb{R}^{512}$.  
 Then we calculate the attention map $\mathbf{A}\in\mathbb{R}^{l_i\times l_j}$ with each element as:
 
 $$ a_{k_ik_j} = \textrm{Sigmoid}(\textrm{MLP}(\textrm{Cat}(\textbf{e}_{ik_i}, \textbf{e}_{jk_j}))),$$
