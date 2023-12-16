@@ -115,10 +115,10 @@ The configurations for fine-tuning adapted languages models are: learning rate=0
 and Flan-T5-large, while batch size=1 for Flan-t5-xl, max length=100, All codes are implemented with Python3.9.12 and PyTorch2.0.1 with CUDA 11.7. operated on Ubuntu (16.04.7 LTS) server with 2 NVIDIA GeForce GTS A6000 GPUs. Each has a memory of 49GB.
 
 ### Cross Attention Extractor
-With $t_i$ and $t_j$, we use `Bert-tokenizer` to tokenize the sentences and get the embedding for each word $\`\{\textbf{e}_{i1},\cdots,\textbf{e}_{il_i}\}\`$ and $\`\{\textbf{e}_{j1},\cdots,\textbf{e}_{jl_j}\}\`$, where $l_i$ and $l_j$ are the lengths of the indices of tokenized sentences $t_i$ and $t_j$. $\`\{\textbf{e}_{i1},\cdots, \textbf{e}_{il_i}\}\`$, $\`\{\textbf{e}_{j1},\cdots,\textbf{e}_{jl_j}\}\`$ are the embeddings for $t_i$ and $t_j$, respectively, with each $\textbf{e} \in \mathbb{R}^{512}$.  
+With $t_i$ and $t_j$, we use `Bert-tokenizer` to tokenize the sentences and get the embedding for each word $\{\mathbf{e}_{i1},\cdots,\mathbf{e}_{il_i}\}$ and $\{\mathbf{e}_{j1},\cdots,\mathbf{e}_{jl_j}\}$, where $l_i$ and $l_j$ are the lengths of the indices of tokenized sentences $t_i$ and $t_j$. $\{\mathbf{e}_{i1},\cdots, \mathbf{e}_{il_i}\}$, $\{\mathbf{e}_{j1},\cdots,\mathbf{e}_{jl_j}\}$ are the embeddings for $t_i$ and $t_j$, respectively, with each $\mathbf{e} \in \mathbb{R}^{512}$.  
 Then we calculate the attention map $\mathbf{A}\in\mathbb{R}^{l_i\times l_j}$ with each element as:
 
-$$ a_{k_ik_j} = \textrm{Sigmoid}(\textrm{MLP}(\textrm{Cat}(\textbf{e}_{ik_i}, \textbf{e}_{jk_j}))),$$
+$$ a_{k_ik_j} = \textrm{Sigmoid}(\textrm{MLP}(\textrm{Cat}(\mathbf{e}_{ik_i}, \mathbf{e}_{jk_j}))),$$
 
 $$k_i\in\{1,\cdots,l_i\}, k_j \in \{1,\cdots,l_j\}$$
 
@@ -128,11 +128,11 @@ $$\overline{\mathbf{A}} = \mathbf{A} / \textrm{Sum}(\mathbf{A})$$
 
 where $\textrm{Sum}(\mathbf{A})$ means the sum of all the elements in $\mathbf{A}$. Then we could get the weighted average of the concatenated embeddings:
 
-$$\textbf{e}_{\mathit{avg}} = \frac{1}{l_i * l_j} \sum_{k_i=1}^{l_i} \sum_{k_j=1}^{l_j} \overline{a}_{k_ik_j} \textrm{Cat}(\textbf{e}_{k_i}, \textbf{e}_{k_j})$$
+$$\mathbf{e}_{\mathit{avg}} = \frac{1}{l_i * l_j} \sum_{k_i=1}^{l_i} \sum_{k_j=1}^{l_j} \overline{a}_{k_ik_j} \textrm{Cat}(\mathbf{e}_{k_i}, \mathbf{e}_{k_j})$$
 
-where $\overline{a}_{k_ik_j}$ is the corresponding element in $\overline{\mathbf{A}}$ $\textbf{e}_{\mathit{avg}} \in \mathbb{R}^{1024}$. Then we stack another MLP $h_\phi$ on top of $\textbf{e}_{\mathit{avg}}$ to yield the prediction:
+where $\overline{a}_{k_ik_j}$ is the corresponding element in $\overline{\mathbf{A}}$ $\mathbf{e}_{\mathit{avg}} \in \mathbb{R}^{1024}$. Then we stack another MLP $h_\phi$ on top of $\mathbf{e}_{\mathit{avg}}$ to yield the prediction:
 
-$$\hat{y} = h_\phi(\textbf{e}_{\mathit{avg}})$$
+$$\hat{y} = h_\phi(\mathbf{e}_{\mathit{avg}})$$
 
 Subsequently, given the label of each pair $(t_i, t_j)$ as positive or negative, we utilize CrossEntropy loss to perform backward propagation and update the two MLPs in Eq. (1) and Eq. (2). Following training, we use the first MLP in Eq. (1) to derive the attention score $\mathbf{A}$ before normalization. Then we calculate the attention score of every word pair between $t_i$ and $t_j$. By averaging the attention scores across rows and columns, we identify the most significant words, $w_i$ in $t_i$ and $w_j$ in $t_j$, which inform the definition of $f_\theta$ in Cross-Attention:
 
