@@ -3,6 +3,15 @@ and Explanation**.
 
 <!-- make contents below -->
 
+# Disclaimer
+
+This dataset is compiled from articles and data sourced from various magazines. This project and its dataset are not affiliated with, endorsed by, or in any way officially connected to the magazines from which this data has been sourced. The dataset is intended for [educational/research/non-commercial] purposes only.
+
+While every effort has been made to ensure the accuracy of this dataset, we do not guarantee the correctness or completeness of the data contained herein. Inclusion of data in this project does not imply endorsement of its content by the magazines.
+
+If you are a representative of any magazine included in this dataset and wish for the data to be removed, please contact us at [yuw164@ucsd.edu].
+
+We shall not be held liable for any damages resulting from the use of this dataset.
 
 ## Requirements
 + torch = 2.0.1
