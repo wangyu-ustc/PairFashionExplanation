@@ -10,6 +10,9 @@ and Explanation**.
 + spacy 3.7.2
 
 ## Datasets
+
+Please refer to this [link](https://drive.google.com/drive/folders/1GUQimVjz_7JVTV-wRa3-psyu7shaJ18S?usp=drive_link) for the dataset. The folder data should be put under this root directory. We put an example empty folder `data` here.
+
 In our paper, we have two stages: Stage I: Extraction and Stage II: Explanation.
 For the Stage I, we use the following dataset: 
 
@@ -191,19 +194,51 @@ We provide more case studies in the following tables.
 | **Ground Truth** | The ruffled button-down shirt adds texture and volume to the outfit, while the black printed cigarette pants provide a sleek and sophisticated contrast. |
 
 
-
-
-
 ## Training
 
 ### Stage I: Extraction
-We put the combined dataset in the folder `data/All`. The script for training `Cross-Attn` model is shown below: 
+We put the combined dataset in the folder `data/All` (please refer to the google drive [link](https://drive.google.com/drive/folders/1GUQimVjz_7JVTV-wRa3-psyu7shaJ18S?usp=drive_link)).  
+The models and logs for Cross-Attention and Rationale-Extraction are also uploaded [here](https://drive.google.com/drive/folders/13QfcMWnMeUIfG460BmU8Z20iIW7OJBeT?usp=drive_link) and [here](https://drive.google.com/drive/folders/1sDtc0t6Xs3Tn3rUPmq21Gei6-z-MuuQZ?usp=sharing), respectively. 
+
+#### Instantiation 1: Cross-Attention
+The command for training `Cross-Attn` model is shown below: 
 
 ```
 cd crossattention
-python main.py --mode train --llm bert --fix_emb --save_path logs/
+python main.py --mode train --llm bert --fix_emb --save_path logs/All_fix_emb/ --lasso 0.01
 ```
-We could obtain a model with accuracy 0.8505 on validation set after one epoch. 
+We could obtain a model with accuracy 0.8505 on validation set after one epoch.  
+Then we can calculate the recall in this dataset: 
+```
+python main.py --mode test_recall --pretrained_weights ./logs/All_fix_emb/model.pt
+```
+After this part, please return to the root directory. 
 
-(... to be continued before the end of 2023)
+#### Instantiation 2: Rationale Extraction
+The command for training `Rationale Extraction` model is shown below:
+```
+cd rationaleextraction
+python main.py --path ../data/All/ --selection 0.3 --abs --mode train
+```
+If you want to train from our checkpoint, please use the following command:
+```
+python main.py --path ../data/All/ --selection 0.3 --abs --mode train --pretrained_weights logs\rationaleextraction_selection0.3\label_model.pt
+```
+After that, we could calculate the recall: 
+```
+python main.py --mode test_recall --path ../data/All/ --pretrained_weights logs\rationaleextraction_selection0.3\label_model.pt 
+```
 
+### Stage II: Generation
+The command for training the finetuned model is shown below: 
+```
+cd generation
+
+# For GPT2, we can train the whole model
+python .\finetune.py --model gpt2
+
+# For Flan-T5-Large and Flan-T5-XL, we need to use LORA
+python .\finetune.py --model flan-t5-large --lora
+python .\finetune.py --model flan-t5-xl --lora
+```
+The models will be saved in the folder `ckpt`
