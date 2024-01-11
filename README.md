@@ -20,7 +20,9 @@ We shall not be held liable for any damages resulting from the use of this datas
 
 ## Datasets
 
-Please refer to this [link](https://drive.google.com/drive/folders/1GUQimVjz_7JVTV-wRa3-psyu7shaJ18S?usp=drive_link) for the dataset. The folder data should be put under this root directory. We put an example empty folder `data` here.
+Please refer to this [link](https://drive.google.com/drive/folders/1GUQimVjz_7JVTV-wRa3-psyu7shaJ18S?usp=drive_link) for the public datasets.  
+For our PFE dataset, please contact me at `yuw164@ucsd.edu` and we will send you the link.  
+The folder data should be put under this root directory. We put an example empty folder `data` here.
 
 In our paper, we have two stages: Stage I: Extraction and Stage II: Explanation.
 For the Stage I, we use the following dataset: 
